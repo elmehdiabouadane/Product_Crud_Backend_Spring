@@ -10,6 +10,10 @@ import {CatalogueService} from '../services/catalogue.service';
 export class ProduitsComponent implements OnInit {
 
   public produits:any;
+  public size:number = 5;
+  public currentPage:number = 0;
+  public totalPages:number;
+  public pages:Array<number>;
 
   constructor(private catService:CatalogueService) { }
 
@@ -17,11 +21,18 @@ export class ProduitsComponent implements OnInit {
   }
 
   onGetProduct() {
-    this.catService.getProducts()
+    this.catService.getProducts(this.currentPage, this.size)
       .subscribe(data => {
+        this.totalPages = data["page"].totalPages;
+        this.pages = new Array<number>(this.totalPages);
         this.produits = data;
       },error => {
         console.log(error);
       });
+  }
+
+  onPageProduct(i) {
+    this.currentPage = i;
+    this.onGetProduct();
   }
 }
