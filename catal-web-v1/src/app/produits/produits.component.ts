@@ -14,6 +14,7 @@ export class ProduitsComponent implements OnInit {
   public currentPage:number = 0;
   public totalPages:number;
   public pages:Array<number>;
+  private currentKeyword: string = "";
 
   constructor(private catService:CatalogueService) { }
 
@@ -33,6 +34,35 @@ export class ProduitsComponent implements OnInit {
 
   onPageProduct(i) {
     this.currentPage = i;
-    this.onGetProduct();
+    this.chercherProduits();
+  }
+
+  onChercher(form: any) {
+    this.currentPage = 0;
+    this.currentKeyword = form.keyword;
+    this.chercherProduits();
+  }
+
+  chercherProduits() {
+    this.catService.getProductsByKeyword(this.currentKeyword, this.currentPage, this.size)
+      .subscribe(data => {
+        this.totalPages = data["page"].totalPages;
+        this.pages = new Array<number>(this.totalPages);
+        this.produits = data;
+      },error => {
+        console.log(error);
+      });
+  }
+
+  onDeleteProduct(p) {
+    let conf = confirm("Êtes-vous sûre ?");
+    if(conf) {
+      this.catService.deleteResource(p._links.self.href)
+        .subscribe(data => {
+          this.chercherProduits();
+        },error => {
+          console.log(error);
+        });
+    }
   }
 }
