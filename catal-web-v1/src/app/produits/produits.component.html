@@ -21,6 +21,7 @@
           <td>{{p.price|number:'0.2'}} DH</td>
           <td>{{p.quantite}}</td>
           <td><a class="clickable" (click)="onDeleteProduct(p)"><img src="assets/images/delete_sign_24px.png"/></a></td>
+          <td><a class="clickable" (click)="onEditProduct(p)"><img src="assets/images/pencil_24px.png"/></a></td>
         </tr>
       </table>
       <ul *ngIf="pages" class="nav nav-pills">
